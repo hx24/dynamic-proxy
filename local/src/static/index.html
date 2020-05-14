@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    目标服务器端口在3002 <br />
+    尝试修改非3002端口，会请求不到数据<br />
+    <button onclick="getData()">请求3002数据</button>
+    <div>
+      <input type="text" id="portInput" /><button onclick="changeProxyPort()">修改代理端口</button>
+    </div>
+    <script>
+      function http(url, onSuccess) {
+        console.log('开始请求')
+
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = onReadyStateChange
+        xhr.open('GET', url, true)
+        xhr.send(null)
+
+        function onReadyStateChange() {
+          if (this.readyState === 4) {
+            // 请求成功
+            console.log('response: ', this.response)
+            onSuccess && onSuccess(this.response)
+          }
+        }
+      }
+
+      function getData() {
+        // const url = 'http://localhost:8091/api/data'
+        const url = '/api/data'
+        http(url)
+      }
+
+      function changeProxyPort() {
+        const port = document.getElementById('portInput').value
+        const url = `http://localhost:3000/setPort?port=${port}`
+        http(url, (data) => {
+          alert(data)
+        })
+      }
+    </script>
+  </body>
+</html>
